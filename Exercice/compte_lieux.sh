@@ -20,4 +20,4 @@ fi
 # Compte les lieux les plus cités
 grep -ho "<Location>[^<]*</Location>" $FICHIERS \
   | sed 's/<\/\?Location>//g' \
-  | sort | uniq -c | sort -nr | head -n $N
+  | sort | uniq -c | sort -nr | head -n $N  
