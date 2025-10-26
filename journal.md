@@ -23,3 +23,26 @@ NOK = $ ( expr $NOK + 1) #ça nous permet d'augmenter l'incrémance de NOK
 fi
 done < $FICHIER_URLS #spécifie que les lignes proviennent du fichier donné en argument
 echo " $OK URLs et $NOK lignes douteuses " # récap des résultats
+
+# Mini projet, très compliqué de tous imbriqué, j'ai du chercher sur internet beaucoup beaucoup de choses, et aussi pas mal de consignes pas très clair. Après pas mal d'heure je penses avoir reussi le projet, mais je n'en suis pas sure, ou en tout cas je ne sais pas si c'est les façon optimal
+# ne sachant pas ou mettre certaine réponse je le fais ici
+# pour cat, créer un sous procéssus, et donc les variables restent dans la boucle et ce n'est pas efficace
+#!/bin/bash
+if [ $# -eq 0 ]; then
+    echo "ERREUR"
+    exit 1
+fi
+file=$1
+n=0
+while read -r line; do
+    n=$((n + 1))
+    echo -e "${n}\t${line}"
+done < "$file" # en mettant file au lieu de fr.txt on peut passer n'importe quel fichier en argument
+status=$(curl -o /dev/null -s -w "%{http_code}\n" "$line") # -o /dev/null pour ne pas afficher le contenu de la page
+# -s pour mode silencieux
+# -w "%{http_code}\n" pour afficher uniquement le code de statut HTTP
+# on utilise curl pour vérifier le code de statut HTTP de l'URL
+encoding=$(curl -s -I "$line" | grep -i "charset" | cut -d= -f2)
+# ou encoding=$(curl -s -I "$line" | grep -i "Content-Encoding" | awk '{print $2}' | tr -d '\r') qui sert à la même chose
+# on récupère l'encodage de contenu de l'URL
+# on utilise curl pour obtenir les en-têtes HTTP et grep pour trouver l'encodage
