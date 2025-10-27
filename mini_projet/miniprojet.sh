@@ -64,4 +64,46 @@ while read -r line; do
     nb_mots=$(curl -s "$line" | wc -w)
     echo -e "${n}\t${line}\tStatus: ${status}\tEncoding: ${encoding}\tWords: ${nb_mots}"
 done < "$file"
-#ceci ajoute le nombre de mots dans le contenu de l'URL en utilisant wc -w et curl pour récupérer le contenu de l'URL et compter les mots.
+#ceci ajoute le nombre de mots dans le contenu de l'URL en utilisant wc -w et curl pour récupérer le contenu de l'URL et compter les mots. 
+
+
+#!/bin/bash
+if [ $# -eq 0 ]; then
+    echo "ERREUR"
+    exit 1
+fi
+file=$1
+n=0
+while IFS= read -r line; do
+    line=$(echo "$line" | tr -d '\r') # ça permet de supprimer les retours chariot éventuels
+    n=$((n + 1))
+    echo "Processing URL #${n}: ${line}"
+    status=$(curl -L -o /dev/null -s -w "%{http_code}\n" "$line") # -o /dev/null pour ne pas afficher le contenu de la page
+    # -s pour mode silencieux
+    # -w "%{http_code}\n" pour afficher uniquement le code de statut HTTP
+    # on utilise curl pour vérifier le code de statut HTTP de l'URL
+    encodage=$(lynx -dump -source "$line" | grep -i "charset=" | head -n 1 | cut -d'"' -f2) # on utilise lynx pour récupérer le contenu de la page et grep pour trouver l'encodage
+    nb_mots=$(curl -s -L -A "Mozilla/5.0" "$line" | wc -w) # ça permet de compter le nombre de mots
+    #Mozilla/5.0 est un user-agent courant qui permet d'éviter d'être bloqué par certains sites web
+    echo -e "numéro de ligne: ${n}\tURL: ${line}\tStatut: ${status}\tEncodage: ${encodage}\tNombre de mots: ${nb_mots}"
+done < "$file"
+#!/bin/bash
+if [ $# -eq 0 ]; then
+    echo "ERREUR"
+    exit 1
+fi
+file=$1
+n=0
+while IFS= read -r line; do
+    line=$(echo "$line" | tr -d '\r') # ça permet de supprimer les retours chariot éventuels
+    n=$((n + 1))
+    echo "Processing URL #${n}: ${line}"
+    status=$(curl -L -o /dev/null -s -w "%{http_code}\n" "$line") # -o /dev/null pour ne pas afficher le contenu de la page
+    # -s pour mode silencieux
+    # -w "%{http_code}\n" pour afficher uniquement le code de statut HTTP
+    # on utilise curl pour vérifier le code de statut HTTP de l'URL
+    encodage=$(lynx -dump -source "$line" | grep -i "charset=" | head -n 1 | cut -d'"' -f2)
+    nb_mots=$(curl -s -L -A "Mozilla/5.0" "$line" | wc -w) # ça permet de compter le nombre de mots
+    #Mozilla/5.0 est un user-agent courant qui permet d'éviter d'être bloqué par certains sites web
+    echo -e "numéro de ligne: ${n}\tURL: ${line}\tStatut: ${status}\tEncodage: ${encodage}\tNombre de mots: ${nb_mots}"
+done < "$file"
