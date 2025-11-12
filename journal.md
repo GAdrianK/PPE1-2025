@@ -48,3 +48,6 @@ encoding=$(curl -s -I "$line" | grep -i "charset" | cut -d= -f2)
 # on utilise curl pour obtenir les en-têtes HTTP et grep pour trouver l'encodage
 
 # 11/11 aujourd'hui je me suis occupé du mini projet 2, franchement pour le code ça allait, rien de trop compliquer, par contre j'oublie toujours une ou deux choses et je me retrouve a faire 400 modifs. mais on avance bien, c'est ludique mais je sens que ca accélère. je commente mon code directement dessus, en l'occurence pour celui ci, très peu car pour le miniproj 1 c'était très détaillé
+
+# cours du 12/11
+# adapatation de mon tableau avec bulma, plutot simple en compréhension, mais très intéressant car on commence à avoir assez d'outil pour créer des projets originaux et esthétique
